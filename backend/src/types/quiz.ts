@@ -1,11 +1,11 @@
-export type PerfilQuiz = 'executor' | 'analista' | 'construtor' | 'visionario' | 'guardiao';
-export type ObjetivoQuiz = 'imovel' | 'veiculo' | 'investimento' | 'patrimonio';
+export type PerfilQuiz = 'acelerador' | 'estrategico' | 'conservador' | 'visionario' | 'patrimonial';
 
 export interface QuizPayload {
   nome: string;
   telefone: string;
-  perfil: PerfilQuiz;
-  objetivo: ObjetivoQuiz;
+  perfil?: PerfilQuiz;
+  perfil_nome?: string;
+  consultor: string;
   tag: string;
 }
 
@@ -14,8 +14,9 @@ export interface BotConversaPayload {
   first_name: string;
   last_name?: string;
   fields: {
-    perfil_quiz: PerfilQuiz;
-    objetivo_quiz: ObjetivoQuiz;
+    perfil_quiz?: PerfilQuiz;
+    perfil_nome?: string;
+    consultor_selecionado: string;
   };
   tags: string[];
 }

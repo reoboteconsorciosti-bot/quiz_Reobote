@@ -14,15 +14,16 @@ export const sendToBotConversa = async (data: QuizPayload) => {
 
     console.log(`[BotConversa] Iniciando integração para: ${data.nome} (${data.telefone})`);
 
-    const payload: BotConversaPayload = {
-      phone: data.telefone,
-      first_name: data.nome,
-      fields: {
-        perfil_quiz: data.perfil,
-        objetivo_quiz: data.objetivo,
-      },
-      tags: [data.tag || 'quiz']
+    const payload = {
+      nome: data.nome,
+      telefone: data.telefone,
+      perfil: data.perfil,
+      perfil_nome: data.perfil_nome,
+      consultor: data.consultor,
+      tag: data.tag || 'quiz'
     };
+
+    console.log(`[BotConversa] Enviando payload para o Webhook:`, JSON.stringify(payload, null, 2));
 
     const response = await axios.post(BASE_URL, payload, {
       headers: {
@@ -30,6 +31,7 @@ export const sendToBotConversa = async (data: QuizPayload) => {
       }
     });
 
+    console.log(`[BotConversa] Resposta recebida do BotConversa:`, response.data);
     console.log(`[BotConversa] Sucesso: Lead enviado corretamente.`);
     return response.data;
   } catch (error: any) {

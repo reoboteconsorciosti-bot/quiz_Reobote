@@ -7,11 +7,11 @@ export const processQuizWebhook = async (req: Request, res: Response) => {
   try {
     const payload: QuizPayload = req.body;
 
-    // Validação básica
-    if (!payload.nome || !payload.telefone || !payload.perfil || !payload.objetivo) {
+    // Validação básica (perfil agora é opcional na captura inicial)
+    if (!payload.nome || !payload.telefone || !payload.consultor) {
       console.warn(`[Webhook] Payload inválido recebido:`, payload);
       return res.status(400).json({ 
-        error: 'Campos obrigatórios ausentes (nome, telefone, perfil, objetivo)' 
+        error: 'Campos obrigatórios ausentes (nome, telefone, consultor)' 
       });
     }
 
