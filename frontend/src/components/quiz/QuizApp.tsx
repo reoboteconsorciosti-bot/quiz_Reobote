@@ -146,7 +146,20 @@ export function QuizApp() {
         </div>
       </header>
 
-      <main className="relative z-10 mx-auto flex min-h-[calc(100vh-90px)] max-w-3xl items-center justify-center px-5 pb-10 sm:px-8">
+      <main className="relative z-10 mx-auto flex min-h-[calc(100vh-90px)] w-full max-w-3xl flex-col items-center justify-start px-5 pb-10 pt-2 sm:px-8">
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="mb-2 flex w-full flex-col items-center justify-center pl-4 sm:pl-8"
+        >
+          <img 
+             src="/icons/reobote_logo_transparente.png" 
+             alt="Reobote Logo" 
+             className="h-28 w-auto object-contain sm:h-60"
+           />
+        </motion.div>
+        
         <AnimatePresence mode="wait">
           {stage === "intro" && <Intro key="intro" onStart={() => setStage("lead")} />}
           {stage === "lead" && (
