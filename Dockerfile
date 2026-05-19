@@ -1,39 +1,25 @@
-# Estagio 1: Build do Frontend
-FROM node:20-slim AS build-frontend
+# Build version: 1.0.7 - Root Dockerfile switching to Node Serve
+FROM node:20-slim AS build
 
 WORKDIR /app
 
-# Copiar arquivos de dependencia do frontend
-COPY frontend/package*.json ./frontend/
+# Copiar arquivos do frontend para o build
+COPY frontend/package*.json ./
+RUN npm install
 
-# Instalar dependencias do frontend
-RUN cd frontend && npm install
+COPY frontend/ .
+RUN npm run build
 
-# Copiar o restante do codigo do frontend
-COPY frontend/ ./frontend/
+# Estágio de Produção
+FROM node:20-slim
 
-# Build do frontend (gera a pasta frontend/dist)
-RUN cd frontend && npm run build
+WORKDIR /app
+RUN npm install -g serve
 
-# Estagio 2: Servir com Nginx
-FROM nginx:stable-alpine
+# Copiar a dist gerada
+COPY --from=build /app/dist ./dist
 
-# Copiar os arquivos buildados do estagio anterior para o diretorio do Nginx
-# Verificamos que o Vite gera a pasta dist dentro da pasta do projeto
-COPY --from=build-frontend /app/frontend/dist /usr/share/nginx/html
+EXPOSE 3000
 
-# Copiar uma configuracao customizada do Nginx para lidar com roteamento SPA
-RUN echo 'server { \
-    listen 80; \
-    location / { \
-        root /usr/share/nginx/html; \
-        index index.html index.htm; \
-        try_files $uri $uri/ /index.html; \
-    } \
-}' > /etc/nginx/conf.d/default.conf
-
-# Expor a porta 80
-EXPOSE 80
-
-# Rodar o Nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Rodar o serve
+CMD ["serve", "-s", "dist", "-l", "3000"]
