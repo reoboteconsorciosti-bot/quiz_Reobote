@@ -19,7 +19,18 @@ RUN cd frontend && npm run build
 FROM nginx:stable-alpine
 
 # Copiar os arquivos buildados do estagio anterior para o diretorio do Nginx
+# Verificamos que o Vite gera a pasta dist dentro da pasta do projeto
 COPY --from=build-frontend /app/frontend/dist /usr/share/nginx/html
+
+# Copiar uma configuracao customizada do Nginx para lidar com roteamento SPA
+RUN echo 'server { \
+    listen 80; \
+    location / { \
+        root /usr/share/nginx/html; \
+        index index.html index.htm; \
+        try_files $uri $uri/ /index.html; \
+    } \
+}' > /etc/nginx/conf.d/default.conf
 
 # Expor a porta 80
 EXPOSE 80
